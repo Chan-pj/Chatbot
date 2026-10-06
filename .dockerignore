@@ -1,0 +1,11 @@
+.env
+.git
+venv/
+.venv/
+__pycache__/
+*.pyc
+chroma_db/
+chat-bot/
+docs/
+seed.sql
+*.log

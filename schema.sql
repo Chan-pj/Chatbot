@@ -1,6 +1,9 @@
 -- 복복이(WelBot) DB 스키마 (데이터 제외)
 CREATE DATABASE IF NOT EXISTS `welbot_db` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `welbot_db`;
+SET NAMES utf8mb4;
+SET FOREIGN_KEY_CHECKS=0;
+
 
 CREATE TABLE `applmetlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -12,7 +15,6 @@ CREATE TABLE `applmetlist` (
   KEY `servId` (`servId`),
   CONSTRAINT `applmetList_ibfk_1` FOREIGN KEY (`servId`) REFERENCES `servlist` (`servId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `basfrmlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `servId` varchar(50) DEFAULT NULL,
@@ -23,7 +25,6 @@ CREATE TABLE `basfrmlist` (
   KEY `servId` (`servId`),
   CONSTRAINT `basfrmList_ibfk_1` FOREIGN KEY (`servId`) REFERENCES `servlist` (`servId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `baslawlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `servId` varchar(50) DEFAULT NULL,
@@ -33,7 +34,6 @@ CREATE TABLE `baslawlist` (
   KEY `servId` (`servId`),
   CONSTRAINT `baslawList_ibfk_1` FOREIGN KEY (`servId`) REFERENCES `servlist` (`servId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `chat_history` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `session_id` varchar(100) DEFAULT NULL,
@@ -45,7 +45,6 @@ CREATE TABLE `chat_history` (
   KEY `user_id` (`user_id`),
   CONSTRAINT `chat_history_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `inqplctadrlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `servId` varchar(50) DEFAULT NULL,
@@ -56,7 +55,6 @@ CREATE TABLE `inqplctadrlist` (
   KEY `servId` (`servId`),
   CONSTRAINT `inqplCtadrList_ibfk_1` FOREIGN KEY (`servId`) REFERENCES `servlist` (`servId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `inqplhmpgreldlist` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `servId` varchar(50) DEFAULT NULL,
@@ -67,7 +65,6 @@ CREATE TABLE `inqplhmpgreldlist` (
   KEY `servId` (`servId`),
   CONSTRAINT `inqplHmpgReldList_ibfk_1` FOREIGN KEY (`servId`) REFERENCES `servlist` (`servId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `median_income` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `year` int(11) DEFAULT NULL,
@@ -76,7 +73,6 @@ CREATE TABLE `median_income` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_year_size` (`year`,`household_size`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `servdetail` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `servId` varchar(50) DEFAULT NULL,
@@ -103,7 +99,6 @@ CREATE TABLE `servdetail` (
   UNIQUE KEY `servId` (`servId`),
   CONSTRAINT `servDetail_ibfk_1` FOREIGN KEY (`servId`) REFERENCES `servlist` (`servId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `servlist` (
   `servId` varchar(50) NOT NULL,
   `servNm` varchar(200) DEFAULT NULL,
@@ -129,15 +124,15 @@ CREATE TABLE `servlist` (
   `enfcEndYmd` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`servId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 CREATE TABLE `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(100) NOT NULL,
   `password` varchar(200) NOT NULL,
   `role` int(11) DEFAULT 1,
-  `region` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp(),
+  `region` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+SET FOREIGN_KEY_CHECKS=1;

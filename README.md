@@ -25,7 +25,7 @@
 | **LLM 응답 안정화** | 추론 모델의 토큰 한도로 JSON 응답이 잘리던 문제를 원인 분석 후 해결 → 카드 응답 정상화 |
 | **비용(토큰) 최적화** | 검색 결과 수·프롬프트 축약으로 질문당 토큰 **약 4,150 → 3,300 (약 20% 절감)** |
 | **할루시네이션 감소** | 지역·기관·신청방법 메타데이터를 컨텍스트에 명시해 LLM이 정보를 추측하지 않도록 개선 |
-| **운영 고려** | 주간 인덱스 재구축 배치, API Rate Limit 재시도, 환경변수 기반 비밀 정보 분리 |
+| **운영 고려** | 주간 인덱스 재구축 배치, API Rate Limit 재시도, 환경변수 기반 비밀 정보 분리, `docker compose` 한 번으로 실행 환경 구성 |
 
 ## 아키텍처
 
@@ -103,6 +103,7 @@ flowchart LR
 | 구분 | 사용 기술 |
 | --- | --- |
 | Backend | Python 3.12, Flask, APScheduler |
+| Infra | Docker, Docker Compose |
 | Database | MySQL / MariaDB, ChromaDB (Vector DB) |
 | AI | Sentence-Transformers (`ko-sroberta-multitask`), Groq API (`openai/gpt-oss-20b`) |
 | Frontend | HTML, CSS, Vanilla JS |
@@ -120,11 +121,28 @@ flowchart LR
 ├── importLocal.py    # 지자체 복지서비스 데이터 수집
 ├── check.py          # Groq 사용 가능 모델 확인용 스크립트
 ├── schema.sql        # DB 테이블 스키마
+├── seed.sql          # 복지 정책 데이터 5,011건 (2026년 6월 수집, 회원 정보 미포함)
+├── Dockerfile · docker-compose.yml
 ├── index.html · script.js · style.css · media.css
 └── .env.example      # 환경변수 템플릿
 ```
 
 ## 실행 방법
+
+정책 데이터 5,011건(`seed.sql`)이 저장소에 포함되어 있어 **공공데이터 API 키 없이** 바로 실행할 수 있습니다. 필요한 것은 [Groq API 키](https://console.groq.com/keys)(무료)뿐입니다.
+
+### 방법 1. Docker (권장)
+
+```bash
+cp .env.example .env           # .env 에 GROQ_API_KEY 입력
+docker compose up --build
+```
+
+- MariaDB 컨테이너가 `schema.sql` → `seed.sql` 순서로 DB를 자동 구성합니다.
+- 최초 실행 시 벡터 인덱스를 생성하며 약 2~3분 소요됩니다. 이후 실행에서는 볼륨에 저장된 인덱스를 재사용합니다.
+- 브라우저에서 `http://localhost:5000` 접속
+
+### 방법 2. 로컬 실행
 
 ```bash
 # 1. 가상환경 & 패키지 설치
@@ -133,20 +151,17 @@ venv\Scripts\activate          # macOS/Linux: source venv/bin/activate
 pip install -r requirements.txt
 
 # 2. 환경변수 설정
-cp .env.example .env           # 이후 .env 에 DB 정보와 API 키 입력
+cp .env.example .env           # .env 에 DB 접속 정보와 GROQ_API_KEY 입력
 
-# 3. DB 스키마 생성
+# 3. DB 스키마 생성 및 정책 데이터 적재
 mysql -u root -p < schema.sql
+mysql -u root -p < seed.sql
 
-# 4. 복지 데이터 수집 (최초 1회, 공공데이터포털 API 키 필요)
-python importPublic.py
-python importLocal.py
-
-# 5. 서버 실행 (최초 실행 시 벡터 인덱스 자동 생성)
+# 4. 서버 실행 (최초 실행 시 벡터 인덱스 자동 생성)
 python app.py
 ```
 
-브라우저에서 `http://localhost:5000` 접속.
+> 데이터를 최신으로 다시 수집하려면 `.env` 에 `WELFARE_API_KEY` 를 입력하고 `python importPublic.py`, `python importLocal.py` 를 실행합니다.
 
 ## 환경변수
 

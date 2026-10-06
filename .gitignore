@@ -14,6 +14,7 @@ chroma_db/
 *.log
 *.sql
 !schema.sql
+!seed.sql
 
 # 이전 버전 작업 폴더
 chat-bot/
