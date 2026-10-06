@@ -1,0 +1,75 @@
+/* 모바일 */
+
+@media (max-width: 768px) {
+  /* 사이드바 슬라이드 */
+  .sidebar {
+    position: fixed; 
+    left: -240px; 
+    top: 0; 
+    height: 100vh; 
+    z-index: 50;
+    transition: left 0.25s ease; 
+    box-shadow: 2px 0 12px rgba(0,0,0,.15);
+  }
+  
+  /* 사이드바 열림 */
+  .sidebar.open { 
+    left: 0; 
+  }
+  
+  .main { 
+    width: 100vw; 
+  }
+  
+  .topbar { 
+    padding: 10px 14px; 
+  }
+  
+  .chat-area { 
+    padding: 14px; 
+  }
+  
+  .input-area { 
+    padding: 10px 12px; 
+  }
+  
+  .msg { 
+    max-width: 90%; 
+  }
+  
+  /* 메뉴 버튼 */
+  .mobile-menu-btn { 
+    display: flex !important; 
+  }
+  
+  /* 모달 너비 */
+  .modal { 
+    width: 92vw !important; 
+    padding: 22px 18px; 
+  }
+  
+  .admin-modal { 
+    width: 92vw !important; 
+  }
+  
+  /* 오버레이 */
+  .sidebar-overlay { 
+    display: none; 
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0,0,0,.3); 
+    z-index: 49; 
+  }
+  
+  .sidebar-overlay.show { 
+    display: block; 
+  }
+}
+
+/* 데스크톱 */
+@media (min-width: 769px) {
+  /* 메뉴 버튼 숨김 */
+  .mobile-menu-btn { 
+    display: none !important; 
+  }
+}

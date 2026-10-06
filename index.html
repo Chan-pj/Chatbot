@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>복복이 - 복지 정책 챗봇</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"/>
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="media.css"/>
+</head>
+<body>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+<div class="sidebar">
+  <div class="logo"><img id="logo-img" alt="복복이"/> 복복이</div>
+  <button class="new-chat-btn" id="new-chat-btn"><i class="ti ti-plus"></i> 새 채팅</button>
+  <div class="session-label">최근 대화</div>
+  <div class="session-list" id="session-list"></div>
+  <div class="sidebar-bottom">
+    <div class="user-info" id="user-info-area"></div>
+    <div id="admin-btn-area"></div>
+    <button class="sidebar-btn" id="fav-open-btn"><i class="ti ti-star"></i> 즐겨찾기</button>
+    <button class="sidebar-btn logout" id="logout-btn" style="display:none"><i class="ti ti-logout"></i> 로그아웃</button>
+  </div>
+</div>
+<div class="main">
+  <div class="topbar">
+    <button class="mobile-menu-btn" id="mobile-menu-btn" style="background:none;border:none;cursor:pointer;font-size:22px;color:#2d6a2d;padding:0 8px 0 0;"><i class="ti ti-menu-2"></i></button>
+    <span id="topbar-title">복지 정책 안내 챗봇</span>
+    <div class="topbar-right"><button class="dark-toggle" id="dark-btn">🌙</button></div>
+  </div>
+  <div class="chat-area" id="chat-area"></div>
+  <div class="input-area">
+    <div class="input-wrap">
+      <i class="ti ti-search" style="font-size:16px;color:var(--tx3);"></i>
+      <input id="msg-input" placeholder="복지 정책을 물어보세요..."/>
+    </div>
+    <button class="send-btn" id="send-btn"><i class="ti ti-arrow-up" style="font-size:18px;"></i></button>
+  </div>
+</div>
+<div class="modal-overlay" id="login-modal">
+  <div class="modal">
+    <h2>🌿 복복이 로그인</h2>
+    <div class="form-group"><label>아이디</label><input type="text" id="login-username" placeholder="아이디 입력"/></div>
+    <div class="form-group"><label>비밀번호</label><input type="password" id="login-password" placeholder="비밀번호 입력"/></div>
+    <div class="modal-error" id="login-error"></div>
+    <button class="modal-btn" id="login-btn">로그인</button>
+    <div class="modal-link">계정이 없으신가요? <span id="go-register">회원가입</span></div>
+  </div>
+</div>
+<div class="modal-overlay" id="register-modal" style="display:none">
+  <div class="modal">
+    <h2>🌿 회원가입</h2>
+    <div class="form-group"><label>아이디</label><input type="text" id="reg-username" placeholder="아이디 입력"/></div>
+    <div class="form-group"><label>비밀번호</label><input type="password" id="reg-password" placeholder="비밀번호 입력"/></div>
+    <div class="form-group"><label>비밀번호 확인</label><input type="password" id="reg-password2" placeholder="비밀번호 재입력"/></div>
+    <div class="form-group"><label>시/도</label>
+      <select id="reg-sido">
+        <option value="">선택하세요</option>
+        <option value="서울특별시">서울특별시</option>
+        <option value="부산광역시">부산광역시</option>
+        <option value="대구광역시">대구광역시</option>
+        <option value="인천광역시">인천광역시</option>
+        <option value="광주광역시">광주광역시</option>
+        <option value="대전광역시">대전광역시</option>
+        <option value="울산광역시">울산광역시</option>
+        <option value="세종특별자치시">세종특별자치시</option>
+        <option value="경기도">경기도</option>
+        <option value="강원특별자치도">강원특별자치도</option>
+        <option value="충청북도">충청북도</option>
+        <option value="충청남도">충청남도</option>
+        <option value="전북특별자치도">전북특별자치도</option>
+        <option value="전라남도">전라남도</option>
+        <option value="경상북도">경상북도</option>
+        <option value="경상남도">경상남도</option>
+        <option value="제주특별자치도">제주특별자치도</option>
+      </select>
+    </div>
+    <div class="form-group"><label>시/군/구</label>
+      <select id="reg-sigungu"><option value="">시/도를 먼저 선택하세요</option></select>
+    </div>
+    <div class="modal-error" id="reg-error"></div>
+    <button class="modal-btn" id="register-btn">가입하기</button>
+    <div class="modal-link">이미 계정이 있으신가요? <span id="go-login">로그인</span></div>
+  </div>
+</div>
+<div class="modal-overlay" id="recommend-modal" style="display:none">
+  <div class="modal">
+    <button class="modal-close" id="rec-close"><i class="ti ti-x"></i></button>
+    <h2><i class="ti ti-heart-handshake"></i> 나에게 맞는 복지 찾기</h2>
+    <div class="form-group"><label>나이</label><input type="number" id="rec-age" placeholder="예: 28"/></div>
+    <div class="form-group"><label>가구 유형</label>
+      <select id="rec-household">
+        <option value="">선택하세요</option>
+        <option value="1인가구">1인 가구</option>
+        <option value="2인가구">2인 가구</option>
+        <option value="한부모가족">한부모 가족</option>
+        <option value="다자녀가구">다자녀 가구</option>
+        <option value="노인가구">노인 가구</option>
+      </select>
+    </div>
+    <div class="form-group"><label>월 소득 (만원)</label><input type="number" id="rec-income" placeholder="예: 200"/></div>
+    <div class="form-group"><label>관심 분야</label>
+      <select id="rec-category">
+        <option value="">선택하세요</option>
+        <option value="취업">취업·일자리</option>
+        <option value="주거">주거·임대</option>
+        <option value="의료">의료·건강</option>
+        <option value="육아">육아·보육</option>
+        <option value="교육">교육·장학금</option>
+        <option value="생활">생활비 지원</option>
+      </select>
+    </div>
+    <button class="modal-btn" id="rec-btn">맞춤 정책 찾기</button>
+  </div>
+</div>
+<div class="modal-overlay" id="fav-modal" style="display:none">
+  <div class="modal">
+    <button class="modal-close" id="fav-close"><i class="ti ti-x"></i></button>
+    <h2><i class="ti ti-star"></i> 즐겨찾기</h2>
+    <div class="fav-list" id="fav-list"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="region-modal" style="display:none">
+  <div class="modal" style="width:360px;">
+    <button class="modal-close" id="region-close"><i class="ti ti-x"></i></button>
+    <h2>📍 지역 정보 수정</h2>
+    <div class="form-group">
+      <label>시/도</label>
+      <select id="edit-sido">
+        <option value="">선택하세요</option>
+        <option value="서울특별시">서울특별시</option>
+        <option value="부산광역시">부산광역시</option>
+        <option value="대구광역시">대구광역시</option>
+        <option value="인천광역시">인천광역시</option>
+        <option value="광주광역시">광주광역시</option>
+        <option value="대전광역시">대전광역시</option>
+        <option value="울산광역시">울산광역시</option>
+        <option value="세종특별자치시">세종특별자치시</option>
+        <option value="경기도">경기도</option>
+        <option value="강원특별자치도">강원특별자치도</option>
+        <option value="충청북도">충청북도</option>
+        <option value="충청남도">충청남도</option>
+        <option value="전북특별자치도">전북특별자치도</option>
+        <option value="전라남도">전라남도</option>
+        <option value="경상북도">경상북도</option>
+        <option value="경상남도">경상남도</option>
+        <option value="제주특별자치도">제주특별자치도</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>시/군/구</label>
+      <select id="edit-sigungu"><option value="">시/도를 먼저 선택하세요</option></select>
+    </div>
+    <button class="modal-btn" id="region-save-btn">변경사항 저장</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="admin-modal" style="display:none">
+  <div class="modal admin-modal">
+    <button class="modal-close" id="admin-close"><i class="ti ti-x"></i></button>
+    <h2><i class="ti ti-shield-check"></i> 회원 관리</h2>
+    <table class="admin-table">
+      <thead><tr><th>아이디</th><th>등급</th><th>가입일</th><th>관리</th></tr></thead>
+      <tbody id="admin-user-list"></tbody>
+    </table>
+  </div>
+</div>
+<div class="modal-overlay" id="logout-modal" style="display:none">
+  <div class="modal" style="width:320px;text-align:center;">
+    <h2 style="justify-content:center;">👋 로그아웃</h2>
+    <p style="color:var(--tx2);font-size:15px;margin:16px 0 24px;">로그아웃 되었습니다.</p>
+    <button class="modal-btn" id="logout-confirm-btn">확인</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

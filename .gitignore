@@ -1,0 +1,26 @@
+# 비밀 값
+.env
+.env.*
+!.env.example
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# 로컬 데이터 / 생성물
+chroma_db/
+*.log
+*.sql
+!schema.sql
+
+# 이전 버전 작업 폴더
+chat-bot/
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

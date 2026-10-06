@@ -1,0 +1,7 @@
+flask
+flask-cors
+pymysql
+requests
+sentence-transformers
+chromadb
+apschedulerpython-dotenv
